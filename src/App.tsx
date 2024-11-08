@@ -5,6 +5,7 @@ import FAQ from './components/FAQ';
 import BusinessAngels from './components/BusinessAngels';
 import Partners from './components/Partners';
 import logo from './contents/images/logo2.png';
+import prospectus from './contents/document/document.pdf';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -129,11 +130,12 @@ function App() {
                 {language === 'en' ? 'FR' : 'EN'}
               </button>
             </div>
-
             <button
               className="px-4 py-2 rounded-lg hidden md:flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
               style={{ backgroundColor: '#FFBF00' }}
-              onClick={() => window.open('/prospectus.pdf', '_blank')}
+              onClick={() => {
+                window.open(prospectus, '_blank');
+              }}
             >
               <Download className="h-4 w-4 mr-2 text-white" />
               <span className="text-white">{t.downloadProspectus}</span>
