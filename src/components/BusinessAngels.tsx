@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
 
-const BusinessAngels = () => {
+// Add this interface at the top of your BusinessAngels file
+interface BusinessAngelsProps {
+  t: {
+    [key: string]: string;
+  };
+}
+
+const BusinessAngels: React.FC<BusinessAngelsProps> = ({ }) => {
   const [showAll, setShowAll] = useState(false);
 
   const angels = Array.from({ length: 33 }, (_, i) => ({

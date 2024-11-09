@@ -130,16 +130,16 @@ function App() {
                 {language === 'en' ? 'FR' : 'EN'}
               </button>
             </div>
-            <button
+
+            <a
+              href={prospectus}
+              download="ISIC_Prospectus.pdf"
               className="px-4 py-2 rounded-lg hidden md:flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
               style={{ backgroundColor: '#FFBF00' }}
-              onClick={() => {
-                window.open(prospectus, '_blank');
-              }}
             >
               <Download className="h-4 w-4 mr-2 text-white" />
               <span className="text-white">{t.downloadProspectus}</span>
-            </button>
+            </a>
 
             <button
               className="md:hidden transition-transform duration-300 active:scale-90 text-white"
@@ -254,7 +254,7 @@ function App() {
       <section id="partners" className="py-20 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.financialPartners}</h2>
-          <Partners />
+          <Partners t={t} />
         </div>
       </section>
 
@@ -262,7 +262,7 @@ function App() {
       <section id="angels" className="py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.ourBusinessAngels}</h2>
-          <BusinessAngels />
+          <BusinessAngels t={t} />
         </div>
       </section>
 
@@ -275,7 +275,7 @@ function App() {
               {t.faq}
             </span>
           </h2>
-          <FAQ language={language} />
+          <FAQ language={language} t={t} />
         </div>
       </section>
 
@@ -283,7 +283,7 @@ function App() {
       <section id="invitation" className="py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.requestInvitation}</h2>
-          <InvitationForm />
+          <InvitationForm t={t} />
         </div>
       </section>
 

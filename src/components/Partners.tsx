@@ -1,6 +1,17 @@
 import React from 'react';
 
-const Partners = () => {
+// Add this interface at the top of your Partners component file
+interface PartnersProps {
+  t: {
+    platform: string;
+    economicSystem: string;
+    partners: string;
+    // ... add other translation keys as needed
+  };
+}
+
+// Then update your component definition
+const Partners: React.FC<PartnersProps> = () => {
   const partners = [
     {
       id: 1,

@@ -3,9 +3,13 @@ import { ChevronDown } from 'lucide-react';
 
 interface FAQProps {
   language: 'en' | 'fr';
+  t: {
+    faq: string;
+    [key: string]: string;
+  };
 }
 
-const FAQ: React.FC<FAQProps> = ({ language }) => {
+const FAQ: React.FC<FAQProps> = ({ language, t }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqs = {

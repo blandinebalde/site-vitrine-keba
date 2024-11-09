@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import { Upload } from 'lucide-react';
 
-const InvitationForm = () => {
+// Add this interface at the top of InvitationForm.tsx
+interface InvitationFormProps {
+  t: {
+    // Add the specific translation keys you use in InvitationForm
+    requestInvitation: string;
+    // ... other translation keys used in the component
+  };
+}
+
+// Update your component definition
+const InvitationForm: React.FC<InvitationFormProps> = () => {
   const [showForm, setShowForm] = useState(false);
   const initialFormData = {
     firstName: '',
