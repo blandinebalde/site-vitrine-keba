@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, ChevronDown, Users, Building2, Wallet, BadgeDollarSign, HelpCircle, ArrowRight } from 'lucide-react';
+import { Download, ChevronDown, Users, Building2, Wallet, BadgeDollarSign, HelpCircle, ArrowRight, ChevronRight, ChevronLeft } from 'lucide-react';
 import InvitationForm from './components/InvitationForm';
 import FAQ from './components/FAQ';
 import BusinessAngels from './components/BusinessAngels';
@@ -7,11 +7,32 @@ import Partners from './components/Partners';
 import logo from './contents/images/logo2.png';
 import prospectus from './contents/document/document.pdf';
 
+const AnimatedText = ({ text }: { text: string }) => {
+  const words = text.split(' ');
+
+  return (
+    <p className="text-gray-300" style={{ fontSize: '1.5rem' }}>
+      {words.map((word, index) => (
+        <span
+          key={index}
+          className="inline-block opacity-0"
+          style={{
+            animation: `fadeIn 0.5s ease-out ${index * 0.1}s forwards`,
+            marginRight: '0.3em'
+          }}
+        >
+          {word}
+        </span>
+      ))}
+    </p>
+  );
+};
+
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [language, setLanguage] = useState<'en' | 'fr'>('en');
-
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -42,7 +63,26 @@ function App() {
       faq: 'Frequently Asked Questions',
       requestInvitation: 'Request an Invitation',
       footerDesc: 'Transforming investment management through innovation',
-      allRightsReserved: 'All rights reserved.'
+      allRightsReserved: 'All rights reserved.',
+      firstName: 'First Name',
+      lastName: 'Last Name',
+      nationality: 'Nationality',
+      countryOfResidence: 'Country of Residence',
+      profession: 'Profession',
+      email: 'Email',
+      phone: 'Phone',
+      investmentAmount: 'Investment Amount',
+      submit: 'Submit',
+      error: 'Error',
+      platformOffers: 'Platform Offers',
+      goldenInvestment: 'Golden Investment',
+      goldenDesc: 'Guaranteed annual returns of 18% to 21%',
+      rockInvestment: 'Rock Investment',
+      rockDesc: 'Opportunity to hold shares in large-scale projects in developing African countries',
+      smeInvestment: 'SME Investment',
+      smeDesc: 'Access to the most successful SMEs with a minimum valuation of five (5) million Swiss francs, equivalent to 3.5 billion CFA francs',
+      primeInvestment: 'Prime Investment',
+      primeDesc: 'Option to secure the purchase of a property worth more than the investment using guaranteed interest'
     },
     fr: {
       platform: 'Plateforme',
@@ -66,7 +106,26 @@ function App() {
       faq: 'Questions Fréquentes',
       requestInvitation: 'Demander une Invitation',
       footerDesc: 'Transformer la gestion des investissements par l\'innovation',
-      allRightsReserved: 'Tous droits réservés.'
+      allRightsReserved: 'Tous droits réservés.',
+      firstName: 'Prénom',
+      lastName: 'Nom',
+      nationality: 'Nationalité',
+      countryOfResidence: 'Pays de Résidence',
+      profession: 'Profession',
+      email: 'Email',
+      phone: 'Téléphone',
+      investmentAmount: 'Montant d\'investissement',
+      submit: 'Soumettre',
+      error: 'Erreur',
+      platformOffers: 'Offres de la Plateforme',
+      goldenInvestment: 'Golden Investment',
+      goldenDesc: 'Rendements annuels garantis de 18% à 21%',
+      rockInvestment: 'Rock Investment',
+      rockDesc: 'Opportunité de détenir des parts dans des projets d\'envergure dans les pays africains en développement',
+      smeInvestment: 'SME Investment',
+      smeDesc: 'Accès aux PME les plus performantes avec une valorisation minimale de cinq (5) millions de francs suisses, soit 3,5 milliards de francs CFA',
+      primeInvestment: 'Prime Investment',
+      primeDesc: 'Option de garantir l\'achat d\'un bien immobilier d\'une valeur supérieure à l\'investissement grâce aux intérêts garantis'
     }
   };
 
@@ -90,103 +149,87 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Navigation */}
-      <nav
-        className="fixed w-full bg-gray-900/95 backdrop-blur-sm z-50 transition-all duration-300"
-        style={{
-          boxShadow: `rgba(0, 0, 0, ${Math.min(scrollY / 100, 0.1)}) 0px 4px 12px`
-        }}
-      >
+      <nav className="fixed w-full bg-gray-900/95 backdrop-blur-sm z-50 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
+            {/* Logo */}
             <div className="flex items-center transition-transform duration-300 hover:scale-105">
               <img src={logo} alt="ISIC Platform Logo" className="h-20 w-auto" />
               <span className="ml-2 text-xl font-bold text-white">ISIC Platform</span>
             </div>
 
-            <div className="hidden md:flex space-x-8">
-              {[
-                { name: t.platform, id: 'platform' },
-                { name: t.economicSystem, id: 'system' },
-                { name: t.partners, id: 'partners' },
-                { name: t.businessAngels, id: 'angels' },
-                { name: t.getInvited, id: 'invitation' }
-              ].map((item, i) => (
-                <button
-                  key={item.name}
-                  onClick={() => scrollToSection(item.id)}
-                  className="text-gray-300 hover:text-[#FFBF00] relative transition-all duration-300 hover:scale-110"
-                  style={{
-                    animation: `fadeInDown 0.5s ease-out ${i * 0.1}s both`
-                  }}
-                >
-                  {item.name}
-                </button>
-              ))}
-
+            {/* Navigation Items */}
+            <div className="flex items-center gap-4">
+              {/* Language Toggle */}
               <button
+                className="nav-item"
                 onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
-                className="text-gray-300 hover:text-[#FFBF00] relative transition-all duration-300 hover:scale-110"
+                style={{
+                  animation: `slideIn 0.5s ease-out 0.7s forwards`
+                }}
               >
                 {language === 'en' ? 'FR' : 'EN'}
               </button>
+
+              {/* Prospectus Download */}
+              <a
+                href={prospectus}
+                download="ISIC_Prospectus.pdf"
+                className="nav-item download-btn"
+                style={{
+                  animation: `slideIn 0.5s ease-out 0.8s forwards`
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                <span>{t.downloadProspectus}</span>
+              </a>
+
+              {/* Hamburger Menu */}
+              <button
+                onClick={() => setIsNavOpen(!isNavOpen)}
+                className="text-gray-300 hover:text-[#FFD700] transition-all duration-300"
+              >
+                <div className={`hamburger-menu ${isNavOpen ? 'open' : ''}`}>
+                  <span className="bar"></span>
+                  <span className="bar"></span>
+                  <span className="bar"></span>
+                </div>
+              </button>
             </div>
+          </div>
 
-            <a
-              href={prospectus}
-              download="ISIC_Prospectus.pdf"
-              className="px-4 py-2 rounded-lg hidden md:flex items-center transition-all duration-300 hover:scale-105 active:scale-95"
-              style={{ backgroundColor: '#FFBF00' }}
-            >
-              <Download className="h-4 w-4 mr-2 text-white" />
-              <span className="text-white">{t.downloadProspectus}</span>
-            </a>
-
-            <button
-              className="md:hidden transition-transform duration-300 active:scale-90 text-white"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <ChevronDown className={`h-6 w-6 transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
-            </button>
+          {/* Vertical Navigation Menu */}
+          <div
+            className={`vertical-nav ${isNavOpen ? 'open' : ''}`}
+          >
+            {[
+              { name: t.platform, id: 'platform' },
+              { name: t.platformOffers, id: 'offers' },
+              { name: t.economicSystem, id: 'system' },
+              { name: t.partners, id: 'partners' },
+              { name: t.businessAngels, id: 'angels' },
+              { name: t.getInvited, id: 'invitation' }
+            ].map((item, i) => (
+              <button
+                key={item.name}
+                onClick={() => {
+                  scrollToSection(item.id);
+                  setIsNavOpen(false);
+                }}
+                className="nav-item"
+                style={{
+                  animation: isNavOpen ? `slideIn 0.5s ease-out ${i * 0.1}s forwards` : 'none'
+                }}
+              >
+                {item.name}
+              </button>
+            ))}
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      <div
-        className={`fixed top-16 w-full bg-gray-800 shadow-lg md:hidden z-40 transition-all duration-300 ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
-          }`}
-      >
-        <div className="px-4 py-2 space-y-2">
-          {[
-            { name: t.platform, id: 'platform' },
-            { name: t.economicSystem, id: 'system' },
-            { name: t.partners, id: 'partners' },
-            { name: t.businessAngels, id: 'angels' },
-            { name: t.getInvited, id: 'invitation' }
-          ].map((item, i) => (
-            <button
-              key={item.name}
-              onClick={() => scrollToSection(item.id)}
-              className="block w-full text-left px-3 py-2 rounded-md text-gray-300 hover:bg-gray-700 transition-all duration-300 hover:translate-x-2"
-              style={{
-                animation: isMenuOpen ? `slideIn 0.3s ease-out ${i * 0.1}s both` : 'none'
-              }}
-            >
-              {item.name}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
-            className="block w-full text-left px-3 py-2 rounded-md text-gray-300 hover:bg-gray-700 transition-all duration-300 hover:translate-x-2"
-          >
-            {language === 'en' ? 'Français' : 'English'}
-          </button>
-        </div>
-      </div>
-
       {/* Hero Section */}
-      <section className="h-screen flex items-center" style={{ background: 'linear-gradient(to bottom right, #1f2937, #111827, #FFBF00)' }}>
+      <section className="h-screen flex items-center" style={{ background: 'linear-gradient(to bottom right, #1f2937, #111827, #FFD700)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center opacity-0 translate-y-10" style={{ animation: 'fadeInUp 1s ease-out forwards' }}>
             <h1 className="text-5xl font-bold text-white mb-6">
@@ -198,7 +241,7 @@ function App() {
             <button
               onClick={() => scrollToSection('platform')}
               className="text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center mx-auto"
-              style={{ backgroundColor: '#FFBF00' }}
+              style={{ backgroundColor: '#FFD700' }}
             >
               {t.learnMore} <ArrowRight className="ml-2 h-5 w-5" />
             </button>
@@ -211,20 +254,54 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.ourPlatform}</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gray-900 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-2">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: '#FFF5D6' }}>
-                <BadgeDollarSign className="h-6 w-6" style={{ color: '#FFBF00' }} />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-white">{t.smartInvestment}</h3>
-              <p className="text-gray-300">{t.smartInvestmentDesc}</p>
+
+            <div className="p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-2 col-span-3">
+              <AnimatedText
+                text={language === 'fr'
+                  ? "En tant que gestionnaire mondial d'actifs, notre objectif chez ISIC est d'aider chacun à améliorer son avenir financier, en faisant preuve de vigilance, de prudence vis-à-vis de nos membres. Grâce à notre système de placement alternatif et de couverture des risques (Mutan), nous présentons la meilleure offre en placements financiers sans risques."
+                  : "As a global asset manager, our goal at ISIC is to help everyone improve their financial future, showing vigilance and prudence towards our members. Thanks to our alternative investment and risk hedging system (Mutan), we present the best offer in risk-free financial investments."
+                }
+              />
             </div>
-            {/* Add more features */}
+
+          </div>
+        </div>
+      </section>
+
+      {/* Offers Section */}
+      <section id="offers" className="py-20 bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.platformOffers}</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              {
+                title: t.goldenInvestment,
+                description: t.goldenDesc
+              },
+              {
+                title: t.rockInvestment,
+                description: t.rockDesc
+              },
+              {
+                title: t.smeInvestment,
+                description: t.smeDesc
+              },
+              {
+                title: t.primeInvestment,
+                description: t.primeDesc
+              }
+            ].map((offer, index) => (
+              <div key={index} className="bg-gray-800 p-8 rounded-xl shadow-sm transition-transform duration-300 hover:scale-[1.02]">
+                <h3 className="text-2xl font-semibold mb-4 text-[#FFD700]">{offer.title}</h3>
+                <p className="text-gray-300">{offer.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Economic System Section */}
-      <section id="system" className="py-20 bg-gray-900">
+      <section id="system" className="py-20 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.economicSystemTitle}</h2>
           <div className="grid md:grid-cols-2 gap-12">
@@ -236,7 +313,7 @@ function App() {
               <ul className="space-y-4">
                 <li className="flex items-start transition-transform duration-300 hover:translate-x-2 text-gray-300">
                   <span className="p-1 rounded mr-3 mt-1" style={{ backgroundColor: '#FFF5D6' }}>
-                    <Building2 className="h-4 w-4" style={{ color: '#FFBF00' }} />
+                    <Building2 className="h-4 w-4" style={{ color: '#FFD700' }} />
                   </span>
                   <span>{t.portfolioManagement}</span>
                 </li>
@@ -251,27 +328,79 @@ function App() {
       </section>
 
       {/* Partners Section */}
-      <section id="partners" className="py-20 bg-gray-800">
+      <section id="partners" className="py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.financialPartners}</h2>
-          <Partners t={t} />
+          <h2 className="text-3xl font-bold text-center mb-12 text-white">
+            <span className="flex items-center justify-center">
+              <Building2 className="h-8 w-8 mr-2" style={{ color: '#FFD700' }} />
+              {t.financialPartners}
+            </span>
+          </h2>
+          <div className="relative flex items-center">
+            <button
+              className="absolute left-0 z-10 p-2 bg-gray-900 rounded-full hover:bg-gray-700 transition-colors"
+              onClick={() => {
+                const container = document.querySelector('.partners-container');
+                if (container) {
+                  const currentScroll = container.scrollLeft;
+                  const itemWidth = container.clientWidth / 4;
+                  container.scrollTo({
+                    left: currentScroll - itemWidth,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+            >
+              <ChevronLeft className="h-6 w-6 text-white" />
+            </button>
+
+            <div className="partners-container overflow-hidden mx-8">
+              <div className="flex gap-4">
+                <div className="grid grid-cols-4 gap-4 w-full">
+                  <Partners language={language} t={t} />
+                </div>
+              </div>
+            </div>
+
+            <button
+              className="absolute right-0 z-10 p-2 bg-gray-900 rounded-full hover:bg-gray-700 transition-colors"
+              onClick={() => {
+                const container = document.querySelector('.partners-container');
+                if (container) {
+                  const currentScroll = container.scrollLeft;
+                  const itemWidth = container.clientWidth / 4;
+                  container.scrollTo({
+                    left: currentScroll + itemWidth,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+            >
+              <ChevronRight className="h-6 w-6 text-white" />
+            </button>
+          </div>
         </div>
       </section>
 
       {/* Business Angels Section */}
-      <section id="angels" className="py-20 bg-gray-900">
+      <section id="angels" className="py-20 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.ourBusinessAngels}</h2>
-          <BusinessAngels t={t} />
+          <h2 className="text-3xl font-bold text-center mb-12 text-white">
+            <span className="flex items-center justify-center">
+              <Users className="h-8 w-8 mr-2" style={{ color: '#FFD700' }} />
+              {t.ourBusinessAngels}
+            </span>
+          </h2>
+          <BusinessAngels language={language} t={t} />
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 bg-gray-800">
+      <section id="faq" className="py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">
             <span className="flex items-center justify-center">
-              <HelpCircle className="h-8 w-8 mr-2" style={{ color: '#FFBF00' }} />
+              <HelpCircle className="h-8 w-8 mr-2" style={{ color: '#FFD700' }} />
               {t.faq}
             </span>
           </h2>
@@ -280,10 +409,10 @@ function App() {
       </section>
 
       {/* Invitation Form Section */}
-      <section id="invitation" className="py-20 bg-gray-900">
+      <section id="invitation" className="py-20 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.requestInvitation}</h2>
-          <InvitationForm t={t} />
+          <InvitationForm language={language} t={t} />
         </div>
       </section>
 
@@ -376,6 +505,102 @@ function App() {
             opacity: 1;
             transform: translateX(0);
           }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .hamburger-menu {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          width: 2rem;
+          height: 2rem;
+          cursor: pointer;
+          padding: 0.25rem;
+        }
+
+        .bar {
+          width: 100%;
+          height: 2px;
+          background-color: currentColor;
+          transition: all 0.3s;
+        }
+
+        .hamburger-menu.open .bar:nth-child(1) {
+          transform: translateY(10px) rotate(45deg);
+        }
+
+        .hamburger-menu.open .bar:nth-child(2) {
+          opacity: 0;
+        }
+
+        .hamburger-menu.open .bar:nth-child(3) {
+          transform: translateY(-10px) rotate(-45deg);
+        }
+
+        .vertical-nav {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background-color: #1f2937;
+          padding: 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          opacity: 0;
+          transform: translateY(-1rem);
+          pointer-events: none;
+          transition: all 0.3s ease-in-out;
+        }
+
+        .vertical-nav.open {
+          opacity: 1;
+          transform: translateY(0);
+          pointer-events: auto;
+        }
+
+        .nav-item {
+          width: 100%;
+          text-align: left;
+          padding: 0.75rem 1rem;
+          color: #9ca3af;
+          transition: all 0.3s;
+          border-radius: 0.5rem;
+          opacity: 0;
+          transform: translateX(-1rem);
+        }
+
+        .nav-item:hover {
+          color: #FFD700;
+          background-color: rgba(255, 255, 255, 0.1);
+          transform: translateX(0.5rem);
+        }
+
+        .download-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.75rem 1rem;
+          background-color: #FFD700;
+          color: #1f2937;
+          text-decoration: none;
+          border-radius: 0.5rem;
+          transition: all 0.3s;
+        }
+
+        .download-btn:hover {
+          background-color: #E6AC00;
+          transform: translateY(-2px);
         }
       `}</style>
     </div>

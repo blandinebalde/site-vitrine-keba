@@ -1,17 +1,145 @@
 import React, { useState } from 'react';
-import { Upload } from 'lucide-react';
+import { Upload, CircleDollarSign, Wallet, CreditCard, BadgeDollarSign, DollarSign, Banknote, Coins } from 'lucide-react';
+import InvestorStatus from './InvestorStatus';
 
-// Add this interface at the top of InvitationForm.tsx
 interface InvitationFormProps {
+  language: 'en' | 'fr';
+
   t: {
-    // Add the specific translation keys you use in InvitationForm
     requestInvitation: string;
-    // ... other translation keys used in the component
+    [key: string]: string;
   };
 }
 
-// Update your component definition
-const InvitationForm: React.FC<InvitationFormProps> = () => {
+const translations = {
+  en: {
+    requestInvitation: 'Request an Invitation',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    nationality: 'Nationality',
+    countryOfResidence: 'Country of Residence',
+    profession: 'Professional Activity',
+    email: 'Email Address',
+    phone: 'Phone Number',
+    investmentAmount: 'Investment Amount ($)',
+    proofOfFunds: 'Proof of Funds',
+    selectCountry: 'Select a country',
+    professionalActivity: 'Professional Activity',
+    emailAddress: 'Email Address',
+    phoneNumber: 'Phone Number',
+    countryCode: 'Code',
+    uploadFile: 'Upload a file',
+    dragAndDrop: 'or drag and drop',
+    fileTypes: 'PDF, DOC, DOCX, JPG up to 10MB',
+    cancel: 'Cancel',
+    submit: 'Submit Request',
+    success: 'Your request has been submitted successfully!',
+    error: 'There was an error submitting your request. Please try again.',
+    investorStatus: 'Investor Status',
+    selectStatus: 'Select Status',
+    categoryA: 'Category A ($50k - $100k)',
+    categoryB: 'Category B ($100k - $250k)',
+    categoryC: 'Category C ($250k - $500k)',
+    categoryD: 'Category D ($500k - $750k)',
+    categoryE: 'Category E ($750k - $1M)',
+    categoryF: 'Category F ($1M - $3M)',
+    categoryG: 'Category G ($3M - $5M)',
+  },
+  fr: {
+    requestInvitation: 'Demander une invitation',
+    firstName: 'Prénom',
+    lastName: 'Nom',
+    nationality: 'Nationalité',
+    countryOfResidence: 'Pays de résidence',
+    profession: 'Activité professionnelle',
+    email: 'Adresse email',
+    phone: 'Numéro de téléphone',
+    investmentAmount: 'Montant de l\'investissement ($)',
+    proofOfFunds: 'Preuve de fonds',
+    selectCountry: 'Sélectionnez un pays',
+    professionalActivity: 'Activité professionnelle',
+    emailAddress: 'Adresse email',
+    phoneNumber: 'Numéro de téléphone',
+    countryCode: 'Code',
+    uploadFile: 'Télécharger un fichier',
+    dragAndDrop: 'ou glisser-déposer',
+    fileTypes: 'PDF, DOC, DOCX, JPG jusqu\'à 10MB',
+    cancel: 'Annuler',
+    submit: 'Envoyer la demande',
+    success: 'Votre demande a été soumise avec succès !',
+    error: 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.',
+    investorStatus: 'Statut d\'investisseur',
+    selectStatus: 'Sélectionner le statut',
+    categoryA: 'Catégorie A (50k$ - 100k$)',
+    categoryB: 'Catégorie B (100k$ - 250k$)',
+    categoryC: 'Catégorie C (250k$ - 500k$)',
+    categoryD: 'Catégorie D (500k$ - 750k$)',
+    categoryE: 'Catégorie E (750k$ - 1M$)',
+    categoryF: 'Catégorie F (1M$ - 3M$)',
+    categoryG: 'Catégorie G (3M$ - 5M$)',
+  }
+};
+
+const investorStatusOptions = [
+  {
+    category: 'A',
+    icon: <CircleDollarSign className="h-8 w-8 text-bronze" />,
+    range: '$50k - $100k',
+    rangeFr: '50k$ - 100k$',
+    mrp: '$10k',
+    membership: '$5k'
+  },
+  {
+    category: 'B',
+    icon: <Wallet className="h-8 w-8 text-silver" />,
+    range: '$100k - $250k',
+    rangeFr: '100k$ - 250k$',
+    mrp: '$20k',
+    membership: '$10k'
+  },
+  {
+    category: 'C',
+    icon: <CreditCard className="h-8 w-8 text-gold" />,
+    range: '$250k - $500k',
+    rangeFr: '250k$ - 500k$',
+    mrp: '$30k',
+    membership: '$20k'
+  },
+  {
+    category: 'D',
+    icon: <BadgeDollarSign className="h-8 w-8 text-platinum" />,
+    range: '$500k - $750k',
+    rangeFr: '500k$ - 750k$',
+    mrp: '$40k',
+    membership: '$25k'
+  },
+  {
+    category: 'E',
+    icon: <DollarSign className="h-8 w-8 text-diamond" />,
+    range: '$750k - $1M',
+    rangeFr: '750k$ - 1M$',
+    mrp: '$50k',
+    membership: '$30k'
+  },
+  {
+    category: 'F',
+    icon: <Banknote className="h-8 w-8 text-elite" />,
+    range: '$1M - $3M',
+    rangeFr: '1M$ - 3M$',
+    mrp: '$150k',
+    membership: '$30k'
+  },
+  {
+    category: 'G',
+    icon: <Coins className="h-8 w-8 text-premium" />,
+    range: '$3M - $5M',
+    rangeFr: '3M$ - 5M$',
+    mrp: '$300k',
+    membership: '$30k'
+  }
+];
+
+const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
   const [showForm, setShowForm] = useState(false);
   const initialFormData = {
     firstName: '',
@@ -23,6 +151,7 @@ const InvitationForm: React.FC<InvitationFormProps> = () => {
     countryCode: '',
     phone: '',
     investmentAmount: '',
+    investorStatus: '',
     proofOfFunds: null as File | null,
   };
   const [formData, setFormData] = useState(initialFormData);
@@ -87,7 +216,6 @@ const InvitationForm: React.FC<InvitationFormProps> = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Create form data object to send
     const formDataToSend = new FormData();
     formDataToSend.append('firstName', formData.firstName);
     formDataToSend.append('lastName', formData.lastName);
@@ -96,7 +224,7 @@ const InvitationForm: React.FC<InvitationFormProps> = () => {
     formDataToSend.append('profession', formData.profession);
     formDataToSend.append('email', formData.email);
     formDataToSend.append('phone', `${formData.countryCode}${formData.phone}`);
-    formDataToSend.append('investmentAmount', formData.investmentAmount);
+    formDataToSend.append('investorStatus', formData.investorStatus);
     if (formData.proofOfFunds) {
       formDataToSend.append('proofOfFunds', formData.proofOfFunds);
     }
@@ -111,14 +239,13 @@ const InvitationForm: React.FC<InvitationFormProps> = () => {
         throw new Error('Network response was not ok');
       }
 
-      // Reset form
       setFormData(initialFormData);
       setShowForm(false);
-      alert('Your request has been submitted successfully!');
+      alert(translations[language].success);
 
     } catch (error) {
       console.error('Error sending request:', error);
-      alert('There was an error submitting your request. Please try again.');
+      alert(translations[language].error);
     }
   };
 
@@ -134,180 +261,202 @@ const InvitationForm: React.FC<InvitationFormProps> = () => {
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+    const value = e.target.value.replace(/\D/g, '');
     const selectedCountry = africanCountries.find(country => country.phoneCode === formData.countryCode);
     if (selectedCountry) {
-      // Limit the phone number to the country's digit requirement
       const limitedValue = value.slice(0, selectedCountry.digits);
       setFormData({ ...formData, phone: limitedValue });
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-4xl mx-auto">
       {!showForm ? (
         <button
           onClick={() => setShowForm(true)}
           className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition font-semibold"
         >
-          Request an Invitation
+          {translations[language].requestInvitation}
         </button>
       ) : (
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm p-8">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-              <input
-                type="text"
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-              <input
-                type="text"
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nationality</label>
-              <select
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={formData.nationality}
-                onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
-              >
-                <option value="">Select a country</option>
-                {africanCountries.map((country) => (
-                  <option key={country.code} value={country.code} className="flex items-center">
-                    <img src={country.flag} alt={country.name} className="w-6 h-4 mr-2" />
-                    {country.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Country of Residence</label>
-              <select
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={formData.countryOfResidence}
-                onChange={(e) => setFormData({ ...formData, countryOfResidence: e.target.value })}
-              >
-                <option value="">Select a country</option>
-                {africanCountries.map((country) => (
-                  <option key={country.code} value={country.code} className="flex items-center">
-                    <img src={country.flag} alt={country.name} className="w-6 h-4 mr-2" />
-                    {country.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Professional Activity</label>
-              <input
-                type="text"
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={formData.profession}
-                onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-              <input
-                type="email"
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-              <div className="flex gap-2">
+        <>
+          <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm p-8">
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].firstName}</label>
+                <input
+                  type="text"
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].lastName}</label>
+                <input
+                  type="text"
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].nationality}</label>
                 <select
                   required
-                  className="w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={formData.countryCode}
-                  onChange={(e) => setFormData({ ...formData, countryCode: e.target.value, phone: '' })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={formData.nationality}
+                  onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
                 >
-                  <option value="">Code</option>
+                  <option value="">{translations[language].selectCountry}</option>
                   {africanCountries.map((country) => (
-                    <option key={country.code} value={country.phoneCode}>
-                      {country.phoneCode} ({country.name})
+                    <option key={country.code} value={country.code} className="flex items-center">
+                      <img src={country.flag} alt={country.name} className="w-6 h-4 mr-2" />
+                      {country.name}
                     </option>
                   ))}
                 </select>
-                <input
-                  type="tel"
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].countryOfResidence}</label>
+                <select
                   required
-                  pattern="[0-9]*"
-                  inputMode="numeric"
-                  placeholder={`${formData.countryCode ? africanCountries.find(c => c.phoneCode === formData.countryCode)?.digits + ' digits' : 'Select country code'}`}
-                  className="w-2/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={formData.phone}
-                  onChange={handlePhoneChange}
-                  disabled={!formData.countryCode}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={formData.countryOfResidence}
+                  onChange={(e) => setFormData({ ...formData, countryOfResidence: e.target.value })}
+                >
+                  <option value="">{translations[language].selectCountry}</option>
+                  {africanCountries.map((country) => (
+                    <option key={country.code} value={country.code} className="flex items-center">
+                      <img src={country.flag} alt={country.name} className="w-6 h-4 mr-2" />
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].professionalActivity}</label>
+                <input
+                  type="text"
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={formData.profession}
+                  onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
                 />
               </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Investment Amount ($)</label>
-              <input
-                type="number"
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={formData.investmentAmount}
-                onChange={(e) => setFormData({ ...formData, investmentAmount: e.target.value })}
-              />
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Proof of Funds</label>
-            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
-              <div className="space-y-1 text-center">
-                <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                <div className="flex text-sm text-gray-600">
-                  <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                    <span>Upload a file</span>
-                    <input
-                      type="file"
-                      className="sr-only"
-                      onChange={handleFileChange}
-                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                    />
-                  </label>
-                  <p className="pl-1">or drag and drop</p>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].emailAddress}</label>
+                <input
+                  type="email"
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].phoneNumber}</label>
+                <div className="flex gap-2">
+                  <select
+                    required
+                    className="w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={formData.countryCode}
+                    onChange={(e) => setFormData({ ...formData, countryCode: e.target.value, phone: '' })}
+                  >
+                    <option value="">{translations[language].countryCode}</option>
+                    {africanCountries.map((country) => (
+                      <option key={country.code} value={country.phoneCode}>
+                        {country.phoneCode} ({country.name})
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="tel"
+                    required
+                    pattern="[0-9]*"
+                    inputMode="numeric"
+                    placeholder={`${formData.countryCode ? africanCountries.find(c => c.phoneCode === formData.countryCode)?.digits + ' digits' : translations[language].selectCountry}`}
+                    className="w-2/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={formData.phone}
+                    onChange={handlePhoneChange}
+                    disabled={!formData.countryCode}
+                  />
                 </div>
-                <p className="text-xs text-gray-500">PDF, DOC, DOCX, JPG up to 10MB</p>
+              </div>
+
+              <div className="col-span-3">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  {translations[language].investorStatus}
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {investorStatusOptions.map((status) => (
+                    <div
+                      key={status.category}
+                      className={`cursor-pointer p-4 rounded-lg border-2 transition-all ${formData.investorStatus === status.category
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-blue-200'
+                        }`}
+                      onClick={() => setFormData({ ...formData, investorStatus: status.category })}
+                    >
+                      <div className="flex flex-col items-center text-center space-y-2">
+                        {status.icon}
+                        <h3 className="font-semibold">
+                          {language === 'en' ? `Category ${status.category}` : `Catégorie ${status.category}`}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {language === 'en' ? status.range : status.rangeFr}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          MRP: {status.mrp}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="mt-8 flex gap-4">
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="w-1/2 bg-gray-200 text-gray-800 py-3 px-4 rounded-lg hover:bg-gray-300 transition font-semibold"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="w-1/2 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition font-semibold"
-            >
-              Submit Request
-            </button>
-          </div>
-        </form>
+            <div className="mt-6">
+              <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].proofOfFunds}</label>
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
+                <div className="space-y-1 text-center">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <div className="flex text-sm text-gray-600">
+                    <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                      <span>{translations[language].uploadFile}</span>
+                      <input
+                        type="file"
+                        className="sr-only"
+                        onChange={handleFileChange}
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                      />
+                    </label>
+                    <p className="pl-1">{translations[language].dragAndDrop}</p>
+                  </div>
+                  <p className="text-xs text-gray-500">{translations[language].fileTypes}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 flex gap-4">
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="w-1/2 bg-gray-200 text-gray-800 py-3 px-4 rounded-lg hover:bg-gray-300 transition font-semibold"
+              >
+                {translations[language].cancel}
+              </button>
+              <button
+                type="submit"
+                className="w-1/2 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition font-semibold"
+              >
+                {translations[language].submit}
+              </button>
+            </div>
+          </form>
+        </>
       )}
     </div>
   );

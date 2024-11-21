@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
 
-// Add this interface at the top of your BusinessAngels file
 interface BusinessAngelsProps {
+  language: 'en' | 'fr';
   t: {
     [key: string]: string;
   };
 }
 
-const BusinessAngels: React.FC<BusinessAngelsProps> = ({ }) => {
+const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
   const [showAll, setShowAll] = useState(false);
+
+  const translations = {
+    en: {
+      showMore: 'Show More',
+      showLess: 'Show Less',
+      investments: 'investments'
+    },
+    fr: {
+      showMore: 'Voir Plus',
+      showLess: 'Voir Moins',
+      investments: 'investissements'
+    }
+  };
 
   const angels = Array.from({ length: 33 }, (_, i) => ({
     id: i + 1,
@@ -36,7 +49,7 @@ const BusinessAngels: React.FC<BusinessAngelsProps> = ({ }) => {
             />
             <h3 className="font-semibold text-lg mb-1">{angel.name}</h3>
             <p className="text-gray-600 text-sm mb-2">{angel.expertise}</p>
-            <p className="text-sm text-blue-600">{angel.investments} investments</p>
+            <p className="text-sm text-blue-600">{angel.investments} {translations[language].investments}</p>
           </div>
         ))}
       </div>
@@ -46,7 +59,7 @@ const BusinessAngels: React.FC<BusinessAngelsProps> = ({ }) => {
         className="mt-8 mx-auto flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all"
       >
         <ChevronLeft className={`h-5 w-5 transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`} />
-        {showAll ? 'Show Less' : 'Show More'}
+        {showAll ? translations[language].showLess : translations[language].showMore}
       </button>
     </div>
   );
