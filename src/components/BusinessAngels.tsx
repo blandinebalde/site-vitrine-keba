@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface BusinessAngelsProps {
   language: 'en' | 'fr';
@@ -9,17 +9,13 @@ interface BusinessAngelsProps {
 }
 
 const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
-  const [showAll, setShowAll] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const translations = {
     en: {
-      showMore: 'Show More',
-      showLess: 'Show Less',
       investments: 'investments'
     },
     fr: {
-      showMore: 'Voir Plus',
-      showLess: 'Voir Moins',
       investments: 'investissements'
     }
   };
@@ -32,35 +28,57 @@ const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
     investments: Math.floor(Math.random() * 20) + 5,
   }));
 
-  const displayedAngels = showAll ? angels : angels.slice(0, 4);
+  const totalPages = Math.ceil(angels.length / 4);
+  const displayedAngels = angels.slice(currentPage * 4, (currentPage + 1) * 4);
+
+  const nextPage = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
+
+  const prevPage = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
 
   return (
-    <div className="relative">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {displayedAngels.map((angel) => (
-          <div
-            key={angel.id}
-            className="bg-white rounded-xl shadow-sm hover:shadow-md transition p-4 flex flex-col items-center"
-          >
-            <img
-              src={angel.image}
-              alt={angel.name}
-              className="w-24 h-24 rounded-full object-cover mb-4"
-            />
-            <h3 className="font-semibold text-lg mb-1">{angel.name}</h3>
-            <p className="text-gray-600 text-sm mb-2">{angel.expertise}</p>
-            <p className="text-sm text-blue-600">{angel.investments} {translations[language].investments}</p>
-          </div>
-        ))}
-      </div>
+    <div className="relative w-full max-w-7xl mx-auto px-4">
+      <div className="flex items-center justify-between gap-4">
+        <button
+          onClick={prevPage}
+          className="flex-none flex items-center justify-center w-12 h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
 
-      <button
-        onClick={() => setShowAll(!showAll)}
-        className="mt-8 mx-auto flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all"
-      >
-        <ChevronLeft className={`h-5 w-5 transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`} />
-        {showAll ? translations[language].showLess : translations[language].showMore}
-      </button>
+        <div className="flex-1 flex justify-between gap-4 overflow-hidden">
+          {displayedAngels.map((angel) => (
+            <div
+              key={angel.id}
+              className="relative w-full aspect-square bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-4"
+              style={{ maxWidth: 'calc((100% - 3rem) / 4)' }}
+            >
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center">
+                <img
+                  src={angel.image}
+                  alt={angel.name}
+                  className="w-20 h-20 rounded-full object-cover mb-2 border-2 border-gray-100 shadow-sm"
+                />
+                <h3 className="font-semibold text-sm mb-1 line-clamp-1">{angel.name}</h3>
+                <p className="text-gray-600 text-xs mb-1 line-clamp-1">{angel.expertise}</p>
+                <p className="text-xs text-blue-600">
+                  {angel.investments} {translations[language].investments}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={nextPage}
+          className="flex-none flex items-center justify-center w-12 h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
+      </div>
     </div>
   );
 };

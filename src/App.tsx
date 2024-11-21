@@ -82,7 +82,11 @@ function App() {
       smeInvestment: 'SME Investment',
       smeDesc: 'Access to the most successful SMEs with a minimum valuation of five (5) million Swiss francs, equivalent to 3.5 billion CFA francs',
       primeInvestment: 'Prime Investment',
-      primeDesc: 'Option to secure the purchase of a property worth more than the investment using guaranteed interest'
+      primeDesc: 'Option to secure the purchase of a property worth more than the investment using guaranteed interest',
+      quickLinks: 'Quick Links',
+      joinPlatform: 'Join Our Platform',
+      readyToRevolutionize: 'Ready to revolutionize your investment journey?',
+      offers: 'Offers'
     },
     fr: {
       platform: 'Plateforme',
@@ -125,7 +129,11 @@ function App() {
       smeInvestment: 'SME Investment',
       smeDesc: 'Accès aux PME les plus performantes avec une valorisation minimale de cinq (5) millions de francs suisses, soit 3,5 milliards de francs CFA',
       primeInvestment: 'Prime Investment',
-      primeDesc: 'Option de garantir l\'achat d\'un bien immobilier d\'une valeur supérieure à l\'investissement grâce aux intérêts garantis'
+      primeDesc: 'Option de garantir l\'achat d\'un bien immobilier d\'une valeur supérieure à l\'investissement grâce aux intérêts garantis',
+      quickLinks: 'Liens Rapides',
+      joinPlatform: 'Rejoignez Notre Plateforme',
+      readyToRevolutionize: 'Prêt à révolutionner votre voyage d\'investissement ?',
+      offers: 'Offres'
     }
   };
 
@@ -330,61 +338,14 @@ function App() {
       {/* Partners Section */}
       <section id="partners" className="py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">
-            <span className="flex items-center justify-center">
-              <Building2 className="h-8 w-8 mr-2" style={{ color: '#FFD700' }} />
-              {t.financialPartners}
-            </span>
-          </h2>
-          <div className="relative flex items-center">
-            <button
-              className="absolute left-0 z-10 p-2 bg-gray-900 rounded-full hover:bg-gray-700 transition-colors"
-              onClick={() => {
-                const container = document.querySelector('.partners-container');
-                if (container) {
-                  const currentScroll = container.scrollLeft;
-                  const itemWidth = container.clientWidth / 4;
-                  container.scrollTo({
-                    left: currentScroll - itemWidth,
-                    behavior: 'smooth'
-                  });
-                }
-              }}
-            >
-              <ChevronLeft className="h-6 w-6 text-white" />
-            </button>
-
-            <div className="partners-container overflow-hidden mx-8">
-              <div className="flex gap-4">
-                <div className="grid grid-cols-4 gap-4 w-full">
-                  <Partners language={language} t={t} />
-                </div>
-              </div>
-            </div>
-
-            <button
-              className="absolute right-0 z-10 p-2 bg-gray-900 rounded-full hover:bg-gray-700 transition-colors"
-              onClick={() => {
-                const container = document.querySelector('.partners-container');
-                if (container) {
-                  const currentScroll = container.scrollLeft;
-                  const itemWidth = container.clientWidth / 4;
-                  container.scrollTo({
-                    left: currentScroll + itemWidth,
-                    behavior: 'smooth'
-                  });
-                }
-              }}
-            >
-              <ChevronRight className="h-6 w-6 text-white" />
-            </button>
-          </div>
+          <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.financialPartners}</h2>
+          <Partners language={language} t={t} />
         </div>
       </section>
 
       {/* Business Angels Section */}
       <section id="angels" className="py-20 bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">
             <span className="flex items-center justify-center">
               <Users className="h-8 w-8 mr-2" style={{ color: '#FFD700' }} />
@@ -432,6 +393,7 @@ function App() {
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                   </svg>
                 </a>
+
                 <a href="#" className="text-gray-400 hover:text-white" aria-label="Twitter">
                   <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
@@ -450,19 +412,20 @@ function App() {
               </div>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+              <h3 className="text-lg font-semibold mb-4">{t.quickLinks}</h3>
               <ul className="space-y-2">
-                <li><button onClick={() => scrollToSection('platform')} className="text-gray-400 hover:text-white">Platform</button></li>
-                <li><button onClick={() => scrollToSection('partners')} className="text-gray-400 hover:text-white">Partners</button></li>
-                <li><button onClick={() => scrollToSection('angels')} className="text-gray-400 hover:text-white">Business Angels</button></li>
-                <li><button onClick={() => scrollToSection('faq')} className="text-gray-400 hover:text-white">FAQ</button></li>
+                <li><button onClick={() => scrollToSection('platform')} className="text-gray-400 hover:text-white">{t.platform}</button></li>
+                <li><button onClick={() => scrollToSection('offers')} className="text-gray-400 hover:text-white">{t.offers}</button></li>
+                <li><button onClick={() => scrollToSection('partners')} className="text-gray-400 hover:text-white">{t.partners}</button></li>
+                <li><button onClick={() => scrollToSection('angels')} className="text-gray-400 hover:text-white">{t.businessAngels}</button></li>
+                <li><button onClick={() => scrollToSection('faq')} className="text-gray-400 hover:text-white">{t.faq}</button></li>
               </ul>
             </div>
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold mb-4">Join Our Platform</h3>
-              <p className="text-gray-400 mb-4">Ready to revolutionize your investment journey?</p>
+              <h3 className="text-lg font-semibold mb-4">{t.joinPlatform}</h3>
+              <p className="text-gray-400 mb-4">{t.readyToRevolutionize}</p>
               <button onClick={() => scrollToSection('invitation')} className="inline-flex items-center px-6 py-3 bg-[#FFBF00] text-white rounded-lg hover:bg-[#E6AC00] transition-colors">
-                Request Invitation
+                {t.requestInvitation}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
             </div>

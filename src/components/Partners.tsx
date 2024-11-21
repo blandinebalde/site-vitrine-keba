@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PartnersProps {
   language: 'en' | 'fr';
@@ -8,6 +9,8 @@ interface PartnersProps {
 }
 
 const Partners: React.FC<PartnersProps> = ({ language, t }) => {
+  const [currentPage, setCurrentPage] = useState(0);
+
   const partners = {
     en: [
       {
@@ -135,22 +138,54 @@ const Partners: React.FC<PartnersProps> = ({ language, t }) => {
     ]
   };
 
+  const totalPages = Math.ceil(partners[language].length / 4);
+  const displayedPartners = partners[language].slice(currentPage * 4, (currentPage + 1) * 4);
+
+  const nextPage = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
+
+  const prevPage = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      {partners[language].map((partner) => (
-        <div
-          key={partner.id}
-          className="bg-white rounded-xl shadow-sm hover:shadow-md transition p-6 flex flex-col items-center"
+    <div className="relative w-full max-w-7xl mx-auto px-4">
+      <div className="flex items-center justify-between gap-4">
+        <button
+          onClick={prevPage}
+          className="flex-none flex items-center justify-center w-12 h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
         >
-          <img
-            src={partner.logo}
-            alt={partner.name}
-            className="w-32 h-32 object-contain mb-4"
-          />
-          <h3 className="font-semibold text-lg mb-2 text-center">{partner.name}</h3>
-          <p className="text-gray-600 text-sm text-center">{partner.description}</p>
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+
+        <div className="flex-1 flex justify-between gap-4 overflow-hidden">
+          {displayedPartners.map((partner) => (
+            <div
+              key={partner.id}
+              className="relative w-full bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-6"
+              style={{ maxWidth: 'calc((100% - 3rem) / 4)' }} // Adjusts for 4 items with gaps
+            >
+              <div className="flex flex-col items-center text-center">
+                <img
+                  src={partner.logo}
+                  alt={partner.name}
+                  className="w-32 h-32 object-contain mb-4"
+                />
+                <h3 className="font-semibold text-lg mb-2 line-clamp-1">{partner.name}</h3>
+                <p className="text-gray-600 text-sm line-clamp-2">{partner.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+
+        <button
+          onClick={nextPage}
+          className="flex-none flex items-center justify-center w-12 h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
+      </div>
     </div>
   );
 };
