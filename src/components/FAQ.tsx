@@ -72,9 +72,9 @@ const FAQ: React.FC<FAQProps> = ({ language, t }) => {
   return (
     <div className="max-w-3xl mx-auto">
       {faqs[language].map((faq, index) => (
-        <div key={index} className="mb-4">
+        <div key={index} className="mb-4 ">
           <button
-            className={`w-full flex justify-between items-center p-4 ${openIndex === index ? 'bg-gray-50 rounded-t-lg' : 'bg-white rounded-lg'} shadow-sm hover:shadow-md transition`}
+            className={`w-full flex justify-between items-center p-4 ${openIndex === index ? ' bg-gray-500 rounded-t-lg' : 'bg-white rounded-lg'} shadow-sm hover:shadow-md transition`}
             onClick={() => setOpenIndex(openIndex === index ? null : index)}
           >
             <span className="font-medium text-left">{faq.question}</span>

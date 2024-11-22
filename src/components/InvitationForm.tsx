@@ -356,7 +356,7 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
-              <div>
+              <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].phoneNumber}</label>
                 <div className="flex gap-2">
                   <select

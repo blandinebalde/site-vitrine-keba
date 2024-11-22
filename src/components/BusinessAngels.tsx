@@ -54,7 +54,7 @@ const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
           {displayedAngels.map((angel) => (
             <div
               key={angel.id}
-              className="relative w-full aspect-square bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-2 md:p-4"
+              className="relative w-full aspect-square  bg-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-2 md:p-4"
               style={{ maxWidth: window.innerWidth < 768 ? 'calc((100% - 2rem) / 3)' : 'calc((100% - 3rem) / 4)' }}
             >
               <div className="absolute inset-0 flex flex-col items-center justify-center p-2 md:p-3 text-center">

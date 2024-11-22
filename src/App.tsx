@@ -5,6 +5,7 @@ import FAQ from './components/FAQ';
 import BusinessAngels from './components/BusinessAngels';
 import Partners from './components/Partners';
 import logo from './contents/images/logo2.png';
+import platform from './contents/images/our_platform.jpg';
 import prospectus from './contents/document/document.pdf';
 
 const AnimatedText = ({ text }: { text: string }) => {
@@ -162,15 +163,15 @@ function App() {
           <div className="flex justify-between h-16 items-center">
             {/* Logo */}
             <div className="flex items-center transition-transform duration-300 hover:scale-105">
-              <img src={logo} alt="ISIC Platform Logo" className="h-20 w-auto" />
-              <span className="ml-2 text-xl font-bold text-white">ISIC Platform</span>
+              <img src={logo} alt="ISIC Platform Logo" className="h-12 w-auto sm:h-20" />
+              <span className="ml-2 text-lg sm:text-xl font-bold text-white">ISIC</span>
             </div>
 
             {/* Navigation Items */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               {/* Language Toggle */}
               <button
-                className="nav-item"
+                className="nav-item text-sm sm:text-base px-2 sm:px-4"
                 onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
                 style={{
                   animation: `slideIn 0.5s ease-out 0.7s forwards`
@@ -183,7 +184,7 @@ function App() {
               <a
                 href={prospectus}
                 download="ISIC_Prospectus.pdf"
-                className="nav-item download-btn"
+                className="nav-item download-btn hidden sm:flex text-sm sm:text-base"
                 style={{
                   animation: `slideIn 0.5s ease-out 0.8s forwards`
                 }}
@@ -195,7 +196,7 @@ function App() {
               {/* Hamburger Menu */}
               <button
                 onClick={() => setIsNavOpen(!isNavOpen)}
-                className="text-gray-300 hover:text-[#FFD700] transition-all duration-300"
+                className="text-gray-300 hover:text-[#FFD700] transition-all duration-300 ml-2"
               >
                 <div className={`hamburger-menu ${isNavOpen ? 'open' : ''}`}>
                   <span className="bar"></span>
@@ -208,7 +209,7 @@ function App() {
 
           {/* Vertical Navigation Menu */}
           <div
-            className={`vertical-nav ${isNavOpen ? 'open' : ''}`}
+            className={`vertical-nav ${isNavOpen ? 'open' : ''} text-sm sm:text-base`}
           >
             {[
               { name: t.platform, id: 'platform' },
@@ -224,7 +225,7 @@ function App() {
                   scrollToSection(item.id);
                   setIsNavOpen(false);
                 }}
-                className="nav-item"
+                className="nav-item py-2 px-4"
                 style={{
                   animation: isNavOpen ? `slideIn 0.5s ease-out ${i * 0.1}s forwards` : 'none'
                 }}
@@ -232,6 +233,15 @@ function App() {
                 {item.name}
               </button>
             ))}
+            {/* Mobile-only download button */}
+            <a
+              href={prospectus}
+              download="ISIC_Prospectus.pdf"
+              className="nav-item download-btn sm:hidden mt-2"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              <span>{t.downloadProspectus}</span>
+            </a>
           </div>
         </div>
       </nav>
@@ -258,11 +268,18 @@ function App() {
       </section>
 
       {/* Platform Section */}
-      <section id="platform" className="py-20 bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section
+        id="platform"
+        className="py-20 bg-gray-800 bg-cover bg-center bg-no-repeat relative"
+        style={{ backgroundImage: `url(${platform})` }}
+      >
+        {/* Add an overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-gray-800/75"></div>
+
+        {/* Content with relative positioning to appear above the overlay */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.ourPlatform}</h2>
           <div className="grid md:grid-cols-3 gap-8">
-
             <div className="p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-2 col-span-3">
               <AnimatedText
                 text={language === 'fr'
@@ -270,8 +287,12 @@ function App() {
                   : "As a global asset manager, our goal at ISIC is to help everyone improve their financial future, showing vigilance and prudence towards our members. Thanks to our alternative investment and risk hedging system (Mutan), we present the best offer in risk-free financial investments."
                 }
               />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
             </div>
-
           </div>
         </div>
       </section>

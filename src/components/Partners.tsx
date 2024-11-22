@@ -163,7 +163,7 @@ const Partners: React.FC<PartnersProps> = ({ language, t }) => {
           {displayedPartners.map((partner) => (
             <div
               key={partner.id}
-              className="relative w-full bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-6"
+              className="relative w-full  bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-6"
               style={{ maxWidth: 'calc((100% - 3rem) / 4)' }} // Adjusts for 4 items with gaps
             >
               <div className="flex flex-col items-center text-center">
