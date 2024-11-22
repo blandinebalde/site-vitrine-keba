@@ -28,8 +28,9 @@ const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
     investments: Math.floor(Math.random() * 20) + 5,
   }));
 
-  const totalPages = Math.ceil(angels.length / 4);
-  const displayedAngels = angels.slice(currentPage * 4, (currentPage + 1) * 4);
+  const itemsPerPage = window.innerWidth < 768 ? 3 : 4;
+  const totalPages = Math.ceil(angels.length / itemsPerPage);
+  const displayedAngels = angels.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
   const nextPage = () => {
     setCurrentPage((prev) => (prev + 1) % totalPages);
@@ -44,29 +45,31 @@ const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
       <div className="flex items-center justify-between gap-4">
         <button
           onClick={prevPage}
-          className="flex-none flex items-center justify-center w-12 h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
+          className="flex-none flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
         >
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
         </button>
 
-        <div className="flex-1 flex justify-between gap-4 overflow-hidden">
+        <div className="flex-1 flex justify-between gap-2 md:gap-4 overflow-hidden">
           {displayedAngels.map((angel) => (
             <div
               key={angel.id}
-              className="relative w-full aspect-square bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-4"
-              style={{ maxWidth: 'calc((100% - 3rem) / 4)' }}
+              className="relative w-full aspect-square bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-2 md:p-4"
+              style={{ maxWidth: window.innerWidth < 768 ? 'calc((100% - 2rem) / 3)' : 'calc((100% - 3rem) / 4)' }}
             >
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center">
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-2 md:p-3 text-center">
                 <img
                   src={angel.image}
                   alt={angel.name}
-                  className="w-20 h-20 rounded-full object-cover mb-2 border-2 border-gray-100 shadow-sm"
+                  className="w-12 h-12 md:w-20 md:h-20 rounded-full object-cover mb-1 md:mb-2 border-2 border-gray-100 shadow-sm"
                 />
-                <h3 className="font-semibold text-sm mb-1 line-clamp-1">{angel.name}</h3>
-                <p className="text-gray-600 text-xs mb-1 line-clamp-1">{angel.expertise}</p>
-                <p className="text-xs text-blue-600">
-                  {angel.investments} {translations[language].investments}
-                </p>
+                <h3 className="font-semibold text-xs md:text-sm line-clamp-1">{angel.name}</h3>
+                <div className="hidden md:block">
+                  <p className="text-gray-600 text-xs mb-1 line-clamp-1">{angel.expertise}</p>
+                  <p className="text-xs text-blue-600">
+                    {angel.investments} {translations[language].investments}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
@@ -74,9 +77,9 @@ const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
 
         <button
           onClick={nextPage}
-          className="flex-none flex items-center justify-center w-12 h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
+          className="flex-none flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
         >
-          <ChevronRight className="h-6 w-6" />
+          <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
         </button>
       </div>
     </div>
