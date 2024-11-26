@@ -3,12 +3,11 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PartnersProps {
   language: 'en' | 'fr';
-  t: {
-    [key: string]: string;
-  };
+  t: any;
+  isDarkMode: boolean;
 }
 
-const Partners: React.FC<PartnersProps> = ({ language, t }) => {
+const Partners: React.FC<PartnersProps> = ({ language, t, isDarkMode }) => {
   const [currentPage, setCurrentPage] = useState(0);
 
   const partners = {
@@ -154,7 +153,7 @@ const Partners: React.FC<PartnersProps> = ({ language, t }) => {
       <div className="flex items-center justify-between gap-4">
         <button
           onClick={prevPage}
-          className="flex-none flex items-center justify-center w-12 h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
+          className={`flex-none flex items-center justify-center w-12 h-12 ${isDarkMode ? 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'} border rounded-full hover:scale-110 transition-all duration-300 shadow-md`}
         >
           <ChevronLeft className="h-6 w-6" />
         </button>
@@ -163,8 +162,9 @@ const Partners: React.FC<PartnersProps> = ({ language, t }) => {
           {displayedPartners.map((partner) => (
             <div
               key={partner.id}
-              className="relative w-full  bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-6"
-              style={{ maxWidth: 'calc((100% - 3rem) / 4)' }} // Adjusts for 4 items with gaps
+              className={`relative w-full rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-6 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
+                }`}
+              style={{ maxWidth: 'calc((100% - 3rem) / 4)' }}
             >
               <div className="flex flex-col items-center text-center">
                 <img
@@ -173,7 +173,9 @@ const Partners: React.FC<PartnersProps> = ({ language, t }) => {
                   className="w-32 h-32 object-contain mb-4"
                 />
                 <h3 className="font-semibold text-lg mb-2 line-clamp-1">{partner.name}</h3>
-                <p className="text-gray-600 text-sm line-clamp-2">{partner.description}</p>
+                <p className={`text-sm line-clamp-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  {partner.description}
+                </p>
               </div>
             </div>
           ))}
@@ -181,7 +183,7 @@ const Partners: React.FC<PartnersProps> = ({ language, t }) => {
 
         <button
           onClick={nextPage}
-          className="flex-none flex items-center justify-center w-12 h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
+          className={`flex-none flex items-center justify-center w-12 h-12 ${isDarkMode ? 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'} border rounded-full hover:scale-110 transition-all duration-300 shadow-md`}
         >
           <ChevronRight className="h-6 w-6" />
         </button>

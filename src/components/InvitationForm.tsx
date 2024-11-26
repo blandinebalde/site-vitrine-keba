@@ -11,6 +11,8 @@ interface InvitationFormProps {
     requestInvitation: string;
     [key: string]: string;
   };
+
+  isDarkMode: boolean;
 }
 
 const translations = {
@@ -141,7 +143,7 @@ const investorStatusOptions = [
   }
 ];
 
-const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
+const InvitationForm: React.FC<InvitationFormProps> = ({ language, t, isDarkMode }) => {
   const [showForm, setShowForm] = useState(false);
   const initialFormData = {
     firstName: '',
@@ -254,7 +256,6 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
 
         // Document Information
         proofOfFundsName: formData.proofOfFunds?.name || 'No document',
-        //proofOfFunds: fileBase64 || null  // This controls the #if condition in template
       };
 
       // Initialize EmailJS
@@ -265,8 +266,6 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
         config.emailjs.templateId,
         templateParams,
         config.emailjs.publicKey,
-        //'GLxgkOltMV9Y7vi51',
-        //attachments ? { attachments } : undefined
       );
 
       if (response.status === 200) {
@@ -323,33 +322,36 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
         </button>
       ) : (
         <>
-          <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm p-8">
+          <form onSubmit={handleSubmit} className={`rounded-xl shadow-sm p-8 border ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-700 border-gray-200'}`}>
             <div className="grid md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].firstName}</label>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{translations[language].firstName}</label>
                 <input
                   type="text"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   value={formData.firstName}
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].lastName}</label>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{translations[language].lastName}</label>
                 <input
                   type="text"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].nationality}</label>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{translations[language].nationality}</label>
                 <select
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   value={formData.nationality}
                   onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
                 >
@@ -363,10 +365,11 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].countryOfResidence}</label>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{translations[language].countryOfResidence}</label>
                 <select
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   value={formData.countryOfResidence}
                   onChange={(e) => setFormData({ ...formData, countryOfResidence: e.target.value })}
                 >
@@ -380,31 +383,34 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].professionalActivity}</label>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{translations[language].professionalActivity}</label>
                 <input
                   type="text"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   value={formData.profession}
                   onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].emailAddress}</label>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{translations[language].emailAddress}</label>
                 <input
                   type="email"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].phoneNumber}</label>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{translations[language].phoneNumber}</label>
                 <div className="flex gap-2">
                   <select
                     required
-                    className="w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className={`w-1/3 px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+                      }`}
                     value={formData.countryCode}
                     onChange={(e) => setFormData({ ...formData, countryCode: e.target.value, phone: '' })}
                   >
@@ -421,7 +427,8 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
                     pattern="[0-9]*"
                     inputMode="numeric"
                     placeholder={`${formData.countryCode ? africanCountries.find(c => c.phoneCode === formData.countryCode)?.digits + ' digits' : translations[language].selectCountry}`}
-                    className="w-2/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className={`w-2/3 px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+                      }`}
                     value={formData.phone}
                     onChange={handlePhoneChange}
                     disabled={!formData.countryCode}
@@ -430,7 +437,7 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
               </div>
 
               <div className="col-span-3">
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className={`block text-sm font-medium mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                   {translations[language].investorStatus}
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -438,8 +445,10 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
                     <div
                       key={status.category}
                       className={`cursor-pointer p-4 rounded-lg border-2 transition-all ${formData.investorStatus === status.category
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-blue-200'
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900'
+                        : isDarkMode
+                          ? 'border-gray-600 hover:border-blue-400'
+                          : 'border-gray-200 hover:border-blue-200'
                         }`}
                       onClick={() => setFormData({ ...formData, investorStatus: status.category })}
                     >
@@ -448,10 +457,10 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
                         <h3 className="font-semibold">
                           {language === 'en' ? `Category ${status.category}` : `Catégorie ${status.category}`}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                           {language === 'en' ? status.range : status.rangeFr}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                           MRP: {status.mrp}
                         </p>
                       </div>
@@ -462,12 +471,14 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
             </div>
 
             <div className="mt-6">
-              <label className="block text-sm font-medium text-gray-700 mb-1">{translations[language].proofOfFunds}</label>
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
+              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{translations[language].proofOfFunds}</label>
+              <div className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-lg ${isDarkMode ? 'border-gray-600' : 'border-gray-300'
+                }`}>
                 <div className="space-y-1 text-center">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="flex text-sm text-gray-600">
-                    <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                  <Upload className={`mx-auto h-12 w-12 ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`} />
+                  <div className={`flex text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <label className={`relative cursor-pointer rounded-md font-medium focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500 ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'
+                      }`}>
                       <span>{translations[language].uploadFile}</span>
                       <input
                         type="file"
@@ -478,7 +489,7 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
                     </label>
                     <p className="pl-1">{translations[language].dragAndDrop}</p>
                   </div>
-                  <p className="text-xs text-gray-500">{translations[language].fileTypes}</p>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{translations[language].fileTypes}</p>
                 </div>
               </div>
             </div>

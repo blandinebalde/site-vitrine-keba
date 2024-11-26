@@ -3,14 +3,12 @@ import { ChevronDown } from 'lucide-react';
 
 interface FAQProps {
   language: 'en' | 'fr';
-  t: {
-    faq: string;
-    [key: string]: string;
-  };
+  t: any;
+  isDarkMode: boolean;
 }
 
-const FAQ: React.FC<FAQProps> = ({ language, t }) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+const FAQ: React.FC<FAQProps> = ({ language, t, isDarkMode }) => {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const faqs = {
     en: [
@@ -70,22 +68,32 @@ const FAQ: React.FC<FAQProps> = ({ language, t }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className={`max-w-3xl mx-auto ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'} p-6 rounded-xl`}>
       {faqs[language].map((faq, index) => (
-        <div key={index} className="mb-4 ">
+        <div
+          key={index}
+          className={`mb-4 rounded-lg ${isDarkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'
+            } shadow-sm transition-all duration-300`}
+        >
           <button
-            className={`w-full flex justify-between items-center p-4 ${openIndex === index ? ' bg-gray-500 rounded-t-lg' : 'bg-white rounded-lg'} shadow-sm hover:shadow-md transition`}
-            onClick={() => setOpenIndex(openIndex === index ? null : index)}
+            onClick={() => setActiveIndex(activeIndex === index ? null : index)}
+            className={`w-full px-6 py-4 text-left flex justify-between items-center rounded-lg focus:outline-none ${isDarkMode
+                ? 'text-gray-100 hover:text-white'
+                : 'text-gray-800 hover:text-gray-900'
+              }`}
           >
-            <span className="font-medium text-left">{faq.question}</span>
+            <span className="font-medium">{faq.question}</span>
             <ChevronDown
-              className={`h-5 w-5 text-gray-500 transition-transform ${openIndex === index ? 'rotate-180' : ''
-                }`}
+              className={`w-5 h-5 transition-transform duration-300 ${activeIndex === index ? 'transform rotate-180' : ''
+                } ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
             />
           </button>
-          {openIndex === index && (
-            <div className="p-4 bg-gray-50 rounded-b-lg mt-1">
-              <p className="text-gray-600">{faq.answer}</p>
+          {activeIndex === index && (
+            <div
+              className={`px-6 pb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                }`}
+            >
+              {faq.answer}
             </div>
           )}
         </div>

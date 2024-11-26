@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, ChevronDown, Users, Building2, Wallet, BadgeDollarSign, HelpCircle, ArrowRight, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Download, ChevronDown, Users, Building2, Wallet, BadgeDollarSign, HelpCircle, ArrowRight, ChevronRight, ChevronLeft, Sun, Moon } from 'lucide-react';
 import InvitationForm from './components/InvitationForm';
 import FAQ from './components/FAQ';
 import BusinessAngels from './components/BusinessAngels';
@@ -34,12 +34,28 @@ function App() {
   const [scrollY, setScrollY] = useState(0);
   const [language, setLanguage] = useState<'en' | 'fr'>('en');
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDarkMode(prefersDark);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDarkMode);
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
 
   const translations = {
     en: {
@@ -156,22 +172,38 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-[#f3f4f6]'}`}>
       {/* Navigation */}
-      <nav className="fixed w-full bg-gray-900/95 backdrop-blur-sm z-50 transition-all duration-300">
+      <nav className={`fixed w-full ${isDarkMode ? 'bg-gray-900/95' : 'bg-white/95'} backdrop-blur-sm z-50 transition-all duration-300`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Logo */}
             <div className="flex items-center transition-transform duration-300 hover:scale-105">
               <img src={logo} alt="ISIC Platform Logo" className="h-12 w-auto sm:h-20" />
-              <span className="ml-2 text-lg sm:text-xl font-bold text-white">ISIC</span>
+              <span className={`ml-2 text-lg sm:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>ISIC</span>
             </div>
 
             {/* Navigation Items */}
             <div className="flex items-center gap-2 sm:gap-4">
+              {/* Theme Toggle */}
+              <button
+                className={`nav-item text-sm sm:text-base px-2 sm:px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                aria-label="Toggle theme"
+                style={{
+                  animation: `slideIn 0.5s ease-out 0.6s forwards`
+                }}
+              >
+                {isDarkMode ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )}
+              </button>
+
               {/* Language Toggle */}
               <button
-                className="nav-item text-sm sm:text-base px-2 sm:px-4"
+                className={`nav-item text-sm sm:text-base px-2 sm:px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                 onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
                 style={{
                   animation: `slideIn 0.5s ease-out 0.7s forwards`
@@ -196,7 +228,7 @@ function App() {
               {/* Hamburger Menu */}
               <button
                 onClick={() => setIsNavOpen(!isNavOpen)}
-                className="text-gray-300 hover:text-[#FFD700] transition-all duration-300 ml-2"
+                className={`text-gray-300 hover:text-[#FFD700] transition-all duration-300 ml-2`}
               >
                 <div className={`hamburger-menu ${isNavOpen ? 'open' : ''}`}>
                   <span className="bar"></span>
@@ -209,7 +241,8 @@ function App() {
 
           {/* Vertical Navigation Menu */}
           <div
-            className={`vertical-nav ${isNavOpen ? 'open' : ''} text-sm sm:text-base`}
+            className={`vertical-nav ${isNavOpen ? 'open' : ''} text-sm sm:text-base ${isDarkMode ? 'bg-gray-800' : 'bg-white'
+              }`}
           >
             {[
               { name: t.platform, id: 'platform' },
@@ -225,7 +258,7 @@ function App() {
                   scrollToSection(item.id);
                   setIsNavOpen(false);
                 }}
-                className="nav-item py-2 px-4"
+                className={`nav-item py-2 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                 style={{
                   animation: isNavOpen ? `slideIn 0.5s ease-out ${i * 0.1}s forwards` : 'none'
                 }}
@@ -247,13 +280,17 @@ function App() {
       </nav>
 
       {/* Hero Section */}
-      <section className="h-screen flex items-center" style={{ background: 'linear-gradient(to bottom right, #1f2937, #111827, #FFD700)' }}>
+      <section className="h-screen flex items-center" style={{
+        background: isDarkMode
+          ? 'linear-gradient(to bottom right, #1f2937, #111827, #FFD700)'
+          : 'linear-gradient(to bottom right, #f3f4f6, #e5e7eb, #FFD700)'
+      }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center opacity-0 translate-y-10" style={{ animation: 'fadeInUp 1s ease-out forwards' }}>
-            <h1 className="text-5xl font-bold text-white mb-6">
+            <h1 className={`text-5xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               {t.heroTitle}
             </h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            <p className={`text-xl mb-8 max-w-3xl mx-auto ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               {t.heroSubtitle}
             </p>
             <button
@@ -270,17 +307,19 @@ function App() {
       {/* Platform Section */}
       <section
         id="platform"
-        className="py-20 bg-gray-800 bg-cover bg-center bg-no-repeat relative"
+        className={`py-20 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'} bg-cover bg-center bg-no-repeat relative transition-colors duration-300`}
         style={{ backgroundImage: `url(${platform})` }}
       >
-        {/* Add an overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-gray-800/75"></div>
-
-        {/* Content with relative positioning to appear above the overlay */}
+        <div className={`absolute inset-0 ${isDarkMode ? 'bg-gray-900/90' : 'bg-gray-100/90'} transition-colors duration-300`}></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.ourPlatform}</h2>
+          <h2 className={`text-3xl font-bold text-center mb-12 ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`}>
+            {t.ourPlatform}
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-2 col-span-3">
+            <div className={`p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-2 col-span-3 ${isDarkMode
+              ? 'bg-gray-800/50 text-gray-600 shadow-gray-700'
+              : 'bg-white/50 text-gray-800 shadow-gray-200'
+              }`}>
               <AnimatedText
                 text={language === 'fr'
                   ? "En tant que gestionnaire mondial d'actifs, notre objectif chez ISIC est d'aider chacun à améliorer son avenir financier, en faisant preuve de vigilance, de prudence vis-à-vis de nos membres. Grâce à notre système de placement alternatif et de couverture des risques (Mutan), nous présentons la meilleure offre en placements financiers sans risques."
@@ -298,9 +337,11 @@ function App() {
       </section>
 
       {/* Offers Section */}
-      <section id="offers" className="py-20 bg-gray-900">
+      <section id="offers" className={`py-20 ${isDarkMode ? 'bg-gray-900' : 'bg-white'} transition-colors duration-300`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.platformOffers}</h2>
+          <h2 className={`text-3xl font-bold text-center mb-12 ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`}>
+            {t.platformOffers}
+          </h2>
           <div className="grid md:grid-cols-2 gap-8">
             {[
               {
@@ -320,9 +361,15 @@ function App() {
                 description: t.primeDesc
               }
             ].map((offer, index) => (
-              <div key={index} className="bg-gray-800 p-8 rounded-xl shadow-sm transition-transform duration-300 hover:scale-[1.02]">
+              <div
+                key={index}
+                className={`${isDarkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'
+                  } p-8 rounded-xl shadow-sm transition-all duration-300 hover:scale-[1.02]`}
+              >
                 <h3 className="text-2xl font-semibold mb-4 text-[#FFD700]">{offer.title}</h3>
-                <p className="text-gray-300">{offer.description}</p>
+                <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-colors duration-300`}>
+                  {offer.description}
+                </p>
               </div>
             ))}
           </div>
@@ -330,26 +377,32 @@ function App() {
       </section>
 
       {/* Economic System Section */}
-      <section id="system" className="py-20 bg-gray-800">
+      <section id="system" className={`py-20 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'} transition-colors duration-300`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.economicSystemTitle}</h2>
+          <h2 className={`text-3xl font-bold text-center mb-12 ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`}>
+            {t.economicSystemTitle}
+          </h2>
           <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <h3 className="text-2xl font-semibold mb-4 text-white">{t.fundManagement}</h3>
-              <p className="text-gray-300 mb-6">
+              <h3 className={`text-2xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'} transition-colors duration-300`}>
+                {t.fundManagement}
+              </h3>
+              <p className={`mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-colors duration-300`}>
                 {t.fundManagementDesc}
               </p>
               <ul className="space-y-4">
-                <li className="flex items-start transition-transform duration-300 hover:translate-x-2 text-gray-300">
+                <li className="flex items-start transition-all duration-300 hover:translate-x-2">
                   <span className="p-1 rounded mr-3 mt-1" style={{ backgroundColor: '#FFF5D6' }}>
                     <Building2 className="h-4 w-4" style={{ color: '#FFD700' }} />
                   </span>
-                  <span>{t.portfolioManagement}</span>
+                  <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-colors duration-300`}>
+                    {t.portfolioManagement}
+                  </span>
                 </li>
-                {/* Add more points */}
               </ul>
             </div>
-            <div className="bg-gray-800 p-8 rounded-xl shadow-sm transition-transform duration-300 hover:scale-[1.02]">
+            <div className={`${isDarkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'
+              } p-8 rounded-xl shadow-sm transition-all duration-300 hover:scale-[1.02]`}>
               {/* Add fund manager profiles or statistics */}
             </div>
           </div>
@@ -357,49 +410,53 @@ function App() {
       </section>
 
       {/* Partners Section */}
-      <section id="partners" className="py-20 bg-gray-900">
+      <section id="partners" className={`py-20 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.financialPartners}</h2>
-          <Partners language={language} t={t} />
+          <h2 className={`text-3xl font-bold text-center mb-12 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            {t.financialPartners}
+          </h2>
+          <Partners language={language} t={t} isDarkMode={isDarkMode} />
         </div>
       </section>
 
       {/* Business Angels Section */}
-      <section id="angels" className="py-20 bg-gray-800">
+      <section id="angels" className={`py-20 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
         <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">
+          <h2 className={`text-3xl font-bold text-center mb-12 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             <span className="flex items-center justify-center">
               <Users className="h-8 w-8 mr-2" style={{ color: '#FFD700' }} />
               {t.ourBusinessAngels}
             </span>
           </h2>
-          <BusinessAngels language={language} t={t} />
+          <BusinessAngels language={language} t={t} isDarkMode={isDarkMode} />
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 bg-gray-900">
+      <section id="faq" className={`py-20 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">
+          <h2 className={`text-3xl font-bold text-center mb-12 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             <span className="flex items-center justify-center">
               <HelpCircle className="h-8 w-8 mr-2" style={{ color: '#FFD700' }} />
               {t.faq}
             </span>
           </h2>
-          <FAQ language={language} t={t} />
+          <FAQ language={language} t={t} isDarkMode={isDarkMode} />
         </div>
       </section>
 
       {/* Invitation Form Section */}
-      <section id="invitation" className="py-20 bg-gray-800">
+      <section id="invitation" className={`py-20 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">{t.requestInvitation}</h2>
-          <InvitationForm language={language} t={t} />
+          <h2 className={`text-3xl font-bold text-center mb-12 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            {t.requestInvitation}
+          </h2>
+          <InvitationForm language={language} t={t} isDarkMode={isDarkMode} />
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-black text-white py-12">
+      <footer className={`${isDarkMode ? 'bg-black text-white' : 'bg-gray-900 text-white'} py-12`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="transition-transform duration-300 hover:scale-105">
@@ -435,8 +492,7 @@ function App() {
             <div>
               <h3 className="text-lg font-semibold mb-4">{t.quickLinks}</h3>
               <ul className="space-y-2">
-                <li><button onClick={() => scrollToSection('platform')} className="text-gray-400 hover:text-white">{t.platform}</button></li>
-                <li><button onClick={() => scrollToSection('offers')} className="text-gray-400 hover:text-white">{t.offers}</button></li>
+                <li><button onClick={() => scrollToSection('platform')} className="text-gray-400 hover:text-white">{t.platform}</button></li>                <li><button onClick={() => scrollToSection('offers')} className="text-gray-400 hover:text-white">{t.offers}</button></li>
                 <li><button onClick={() => scrollToSection('partners')} className="text-gray-400 hover:text-white">{t.partners}</button></li>
                 <li><button onClick={() => scrollToSection('angels')} className="text-gray-400 hover:text-white">{t.businessAngels}</button></li>
                 <li><button onClick={() => scrollToSection('faq')} className="text-gray-400 hover:text-white">{t.faq}</button></li>
@@ -502,6 +558,16 @@ function App() {
           }
         }
 
+        * {
+          transition-property: color, background-color, border-color;
+          transition-duration: 200ms;
+          transition-timing-function: ease-in-out;
+        }
+
+        .dark {
+          color-scheme: dark;
+        }
+
         .hamburger-menu {
           display: flex;
           flex-direction: column;
@@ -536,7 +602,7 @@ function App() {
           top: 100%;
           left: 0;
           right: 0;
-          background-color: #1f2937;
+          background-color: ${isDarkMode ? '#1f2937' : '#ffffff'};
           padding: 1rem;
           display: flex;
           flex-direction: column;
@@ -545,6 +611,7 @@ function App() {
           transform: translateY(-1rem);
           pointer-events: none;
           transition: all 0.3s ease-in-out;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .vertical-nav.open {
@@ -557,7 +624,7 @@ function App() {
           width: 100%;
           text-align: left;
           padding: 0.75rem 1rem;
-          color: #9ca3af;
+          color: ${isDarkMode ? '#9ca3af' : '#4b5563'};
           transition: all 0.3s;
           border-radius: 0.5rem;
           opacity: 0;
@@ -566,7 +633,7 @@ function App() {
 
         .nav-item:hover {
           color: #FFD700;
-          background-color: rgba(255, 255, 255, 0.1);
+          background-color: ${isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'};
           transform: translateX(0.5rem);
         }
 

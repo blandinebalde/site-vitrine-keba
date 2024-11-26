@@ -3,12 +3,11 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface BusinessAngelsProps {
   language: 'en' | 'fr';
-  t: {
-    [key: string]: string;
-  };
+  t: any;
+  isDarkMode: boolean;
 }
 
-const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
+const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t, isDarkMode }) => {
   const [currentPage, setCurrentPage] = useState(0);
 
   const translations = {
@@ -45,7 +44,7 @@ const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
       <div className="flex items-center justify-between gap-4">
         <button
           onClick={prevPage}
-          className="flex-none flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
+          className={`flex-none flex items-center justify-center w-10 h-10 md:w-12 md:h-12 ${isDarkMode ? 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'} border rounded-full hover:scale-110 transition-all duration-300 shadow-md`}
         >
           <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
         </button>
@@ -54,19 +53,19 @@ const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
           {displayedAngels.map((angel) => (
             <div
               key={angel.id}
-              className="relative w-full aspect-square  bg-gray-900 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-2 md:p-4"
+              className={`relative w-full aspect-square rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 p-2 md:p-4 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
               style={{ maxWidth: window.innerWidth < 768 ? 'calc((100% - 2rem) / 3)' : 'calc((100% - 3rem) / 4)' }}
             >
               <div className="absolute inset-0 flex flex-col items-center justify-center p-2 md:p-3 text-center">
                 <img
                   src={angel.image}
                   alt={angel.name}
-                  className="w-12 h-12 md:w-20 md:h-20 rounded-full object-cover mb-1 md:mb-2 border-2 border-gray-100 shadow-sm"
+                  className={`w-12 h-12 md:w-20 md:h-20 rounded-full object-cover mb-1 md:mb-2 border-2 ${isDarkMode ? 'border-gray-700' : 'border-gray-100'} shadow-sm`}
                 />
-                <h3 className="font-semibold text-xs md:text-sm line-clamp-1">{angel.name}</h3>
+                <h3 className={`font-semibold text-xs md:text-sm line-clamp-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>{angel.name}</h3>
                 <div className="hidden md:block">
-                  <p className="text-gray-600 text-xs mb-1 line-clamp-1">{angel.expertise}</p>
-                  <p className="text-xs text-blue-600">
+                  <p className={`text-xs mb-1 line-clamp-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{angel.expertise}</p>
+                  <p className={`text-xs ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                     {angel.investments} {translations[language].investments}
                   </p>
                 </div>
@@ -77,7 +76,7 @@ const BusinessAngels: React.FC<BusinessAngelsProps> = ({ language, t }) => {
 
         <button
           onClick={nextPage}
-          className="flex-none flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-white border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md"
+          className={`flex-none flex items-center justify-center w-10 h-10 md:w-12 md:h-12 ${isDarkMode ? 'bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'} border rounded-full hover:scale-110 transition-all duration-300 shadow-md`}
         >
           <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
         </button>
