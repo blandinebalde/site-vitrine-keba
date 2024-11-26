@@ -12,9 +12,11 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@types/next": "^9.0.0",
     "formidable": "^3.5.2",
     "lucide-react": "^0.344.0",
+    "multiparty": "^4.2.3",
     "next": "^15.0.3",
     "nodemailer": "^6.9.16",
     "react": "^18.2.0",
@@ -22,7 +24,8 @@
   },
   "devDependencies": {
     "@types/formidable": "^3.4.5",
-    "@types/nodemailer": "^6.4.16",
+    "@types/multiparty": "^4.2.1",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",

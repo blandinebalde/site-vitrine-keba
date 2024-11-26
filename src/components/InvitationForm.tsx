@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Upload, CircleDollarSign, Wallet, CreditCard, BadgeDollarSign, DollarSign, Banknote, Coins } from 'lucide-react';
 import InvestorStatus from './InvestorStatus';
+import emailjs from '@emailjs/browser';
+import { config } from '../config';
 
 interface InvitationFormProps {
   language: 'en' | 'fr';
@@ -216,42 +218,79 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('firstName', formData.firstName);
-    formDataToSend.append('lastName', formData.lastName);
-    formDataToSend.append('nationality', africanCountries.find(c => c.code === formData.nationality)?.name || '');
-    formDataToSend.append('countryOfResidence', africanCountries.find(c => c.code === formData.countryOfResidence)?.name || '');
-    formDataToSend.append('profession', formData.profession);
-    formDataToSend.append('email', formData.email);
-    formDataToSend.append('phone', `${formData.countryCode}${formData.phone}`);
-    formDataToSend.append('investorStatus', formData.investorStatus);
-    if (formData.proofOfFunds) {
-      formDataToSend.append('proofOfFunds', formData.proofOfFunds);
-    }
-
     try {
-      const response = await fetch('/api/send-investment-request', {
-        method: 'POST',
-        body: formDataToSend,
-      });
+      let attachments = undefined;
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      // Convert file to base64 if it exists
+      let fileBase64 = '';
+      if (formData.proofOfFunds instanceof File) {
+        fileBase64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(formData.proofOfFunds as File);
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = error => reject(error);
+        });
+        attachments = [{
+          name: formData.proofOfFunds.name,
+          data: fileBase64,
+          type: formData.proofOfFunds.type
+        }];
       }
 
-      setFormData(initialFormData);
-      setShowForm(false);
-      alert(translations[language].success);
+      const templateParams = {
+        // Personal Information
+        firstName: formData.firstName || '',
+        lastName: formData.lastName || '',
+        nationality: africanCountries.find(c => c.code === formData.nationality)?.name || '',
+        countryOfResidence: africanCountries.find(c => c.code === formData.countryOfResidence)?.name || '',
+        profession: formData.profession || '',
+
+        // Contact Information
+        email: formData.email || '',
+        phone: formData.phone ? `${formData.countryCode}${formData.phone}` : '',
+
+        // Investment Information
+        investorStatus: formData.investorStatus || '',
+
+        // Document Information
+        proofOfFundsName: formData.proofOfFunds?.name || 'No document',
+        //proofOfFunds: fileBase64 || null  // This controls the #if condition in template
+      };
+
+      // Initialize EmailJS
+      emailjs.init(config.emailjs.publicKey);
+
+      const response = await emailjs.send(
+        config.emailjs.serviceId,
+        config.emailjs.templateId,
+        templateParams,
+        config.emailjs.publicKey,
+        //'GLxgkOltMV9Y7vi51',
+        //attachments ? { attachments } : undefined
+      );
+
+      if (response.status === 200) {
+        setFormData(initialFormData);
+        setShowForm(false);
+        alert(translations[language].success);
+      }
 
     } catch (error) {
-      console.error('Error sending request:', error);
-      alert(translations[language].error);
+      console.error('Error details:', error);
+      alert('Failed to send email. Please try again or contact support.');
     }
   };
 
+  const MAX_FILE_SIZE = 50 * 1024; // 50KB for EmailJS free tier
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFormData({ ...formData, proofOfFunds: e.target.files[0] });
+      const file = e.target.files[0];
+      if (file.size > MAX_FILE_SIZE) {
+        alert('File is too large. Maximum size is 50kb.');
+        return;
+      }
+      setFormData({ ...formData, proofOfFunds: file });
     }
   };
 
@@ -268,6 +307,10 @@ const InvitationForm: React.FC<InvitationFormProps> = ({ language, t }) => {
       setFormData({ ...formData, phone: limitedValue });
     }
   };
+
+  useEffect(() => {
+    emailjs.init("GLxgkOltMV9Y7vi51");
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto">
